@@ -109,10 +109,11 @@ export default function RegisterScreen() {
                         >
                             Sign Up
                         </Button>
-                        <Grid container justifyContent="flex-end">
+                        <Grid container justifyContent="center">
                             <Grid item>
+                                Already have an account?
                                 <Link href="/login/" variant="body2">
-                                    Already have an account? Sign in
+                                    &nbsp;Sign in
                                 </Link>
                             </Grid>
                         </Grid>
