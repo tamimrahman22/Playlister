@@ -76,25 +76,26 @@ function ListCard(props) {
     let cardElement =
         <ListItem
             id={idNamePair._id}
+            className={'list-card ' + selectClass}
             key={idNamePair._id}
             sx={{ marginTop: '15px', display: 'flex', p: 1 }}
-            style={{ width: '100%', fontSize: '48pt' }}
-            button
+            style={{ width: '100%', fontSize: '28pt' }}
             onClick={(event) => {
                 handleLoadList(event, idNamePair._id)
             }}
         >
-            <Box sx={{ p: 1, flexGrow: 1 }}>{idNamePair.name}</Box>
+            <Box sx={{ p: 1, flexGrow: 1 }}
+            id={"list-card-text-"+idNamePair._id}>{idNamePair.name}</Box>
             <Box sx={{ p: 1 }}>
                 <IconButton onClick={handleToggleEdit} aria-label='edit'>
-                    <EditIcon style={{fontSize:'48pt'}} />
+                    <EditIcon style={{fontSize:'28pt'}} className='playlister-button'/>
                 </IconButton>
             </Box>
             <Box sx={{ p: 1 }}>
                 <IconButton onClick={(event) => {
                         handleDeleteList(event, idNamePair._id)
                     }} aria-label='delete'>
-                    <DeleteIcon style={{fontSize:'48pt'}} />
+                    <DeleteIcon style={{fontSize:'28pt'}} className = 'playlister-button'/>
                 </IconButton>
             </Box>
         </ListItem>
@@ -113,7 +114,7 @@ function ListCard(props) {
                 onKeyPress={handleKeyPress}
                 onChange={handleUpdateText}
                 defaultValue={idNamePair.name}
-                inputProps={{style: {fontSize: 48}}}
+                inputProps={{style: {fontSize: 28}}}
                 InputLabelProps={{style: {fontSize: 24}}}
                 autoFocus
             />
