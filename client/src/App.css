@@ -130,8 +130,8 @@ body {
 }
 
 #list-selector-heading {
-  padding-top: 75px;
-  position: absolute;
+  padding-top: 10px;
+  position: relative;
   left: 0%;
   top: 0%;
   width: 100%;
@@ -189,7 +189,7 @@ body {
   left: 0%;
   top: 10%;
   width: 100%;
-  height: 90%;
+  height: 75%;
   display: flex;
   flex-direction: column;
   overflow: scroll;
