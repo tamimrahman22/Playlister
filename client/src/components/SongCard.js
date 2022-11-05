@@ -38,6 +38,7 @@ function SongCard(props) {
     }
     function handleClick(event) {
         // DOUBLE CLICK IS FOR SONG EDITING
+        console.log(event);
         if (event.detail === 2) {
             store.showEditSongModal(index, song);
         }
@@ -55,7 +56,7 @@ function SongCard(props) {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             draggable="true"
-            onClick={handleClick}
+            onDoubleClick={handleClick}
         >
             {index + 1}.
             <a

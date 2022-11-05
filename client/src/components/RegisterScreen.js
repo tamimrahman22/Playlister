@@ -34,9 +34,12 @@ export default function RegisterScreen() {
                 <Box
                     sx={{
                         marginTop: 8,
+                        
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '55vh',
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
@@ -117,7 +120,7 @@ export default function RegisterScreen() {
                                 </Link>
                             </Grid>
                         </Grid>
-                        <Copyright sx={{ mt: 5 }} />
+                        <Copyright  />
                         
                     </Box>
                 </Box>

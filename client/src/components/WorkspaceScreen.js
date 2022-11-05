@@ -17,6 +17,7 @@ function WorkspaceScreen() {
     store.history = useHistory();
     
     let modalJSX = "";
+    console.log(store.isEditSongModalOpen());
     if (store.isEditSongModalOpen()) {
         modalJSX = <MUIEditSongModal />;
     }
@@ -27,7 +28,7 @@ function WorkspaceScreen() {
         <Box>
         <List 
             id="playlist-cards" 
-            sx={{ width: '100%', bgcolor: 'background.paper' }}
+            sx={{ width: '100%'}}
         >
             {
                 store.currentList.songs.map((song, index) => (
