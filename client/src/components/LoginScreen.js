@@ -16,6 +16,8 @@ import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import MUIAccountErrorModal from './MUIAccountErrorModal';
+
 export default function LoginScreen() {
     const { auth } = useContext(AuthContext);
 
@@ -110,6 +112,7 @@ export default function LoginScreen() {
                         <Copyright sx={{ mt: 5 }} />
                     </Box>
                 </Box>
+                <MUIAccountErrorModal/>
             </Grid>
         </Grid>
     );

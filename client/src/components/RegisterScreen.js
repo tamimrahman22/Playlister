@@ -13,6 +13,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import MUIAccountErrorModal from './MUIAccountErrorModal';
+
 export default function RegisterScreen() {
     const { auth } = useContext(AuthContext);
 
@@ -124,6 +126,7 @@ export default function RegisterScreen() {
                         
                     </Box>
                 </Box>
+                <MUIAccountErrorModal/>
                 
             </Container>
     );

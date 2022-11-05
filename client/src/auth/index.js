@@ -10,13 +10,22 @@ export const AuthActionType = {
     GET_LOGGED_IN: "GET_LOGGED_IN",
     LOGIN_USER: "LOGIN_USER",
     LOGOUT_USER: "LOGOUT_USER",
-    REGISTER_USER: "REGISTER_USER"
+    REGISTER_USER: "REGISTER_USER",
+    ERROR_MODAL: "ERROR_MODAL",
+    HIDE_MODALS: "HIDE_MODALS"
+}
+
+const CurrentModal = {
+    NONE : "NONE",
+    ERROR_MODAL: "ERROR_MODAL"
 }
 
 function AuthContextProvider(props) {
     const [auth, setAuth] = useState({
         user: null,
-        loggedIn: false
+        loggedIn: false,
+        currentModal : CurrentModal.NONE,
+        errorMessage: null,
     });
     const history = useHistory();
 
@@ -36,19 +45,34 @@ function AuthContextProvider(props) {
             case AuthActionType.LOGIN_USER: {
                 return setAuth({
                     user: payload.user,
-                    loggedIn: true
+                    loggedIn: true,
+                    errorMessage: null
                 })
             }
             case AuthActionType.LOGOUT_USER: {
                 return setAuth({
                     user: null,
-                    loggedIn: false
+                    loggedIn: false,
+                    errorMessage: null
                 })
             }
             case AuthActionType.REGISTER_USER: {
                 return setAuth({
                     user: payload.user,
                     loggedIn: true
+                })
+            }
+            case AuthActionType.ERROR_MODAL: {
+                console.log("error modal");
+                return setAuth({
+                    currentModal: CurrentModal.ERROR_MODAL,
+                    errorMessage: payload.errorMessage
+                })
+            }
+            case AuthActionType.HIDE_MODALS: {
+                return setAuth({
+                    currentModal: CurrentModal.NONE,
+                    errorMessage: null
                 })
             }
             default:
@@ -70,29 +94,67 @@ function AuthContextProvider(props) {
     }
 
     auth.registerUser = async function(firstName, lastName, email, password, passwordVerify) {
-        const response = await api.registerUser(firstName, lastName, email, password, passwordVerify);      
-        if (response.status === 200) {
+        try {
+            const response = await api.registerUser(firstName, lastName, email, password, passwordVerify);      
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.REGISTER_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+            }
+        } catch {
             authReducer({
-                type: AuthActionType.REGISTER_USER,
+                type: AuthActionType.ERROR_MODAL,
                 payload: {
-                    user: response.data.user
+                    errorMessage: "Please enter all required fields"
                 }
             })
-            history.push("/");
         }
     }
 
     auth.loginUser = async function(email, password) {
-        const response = await api.loginUser(email, password);
-        if (response.status === 200) {
+        try {
+            const response = await api.loginUser(email, password);
+            console.log("Response status: "+response.status);
+            if (response.status === 200) {
+                authReducer({
+                    type: AuthActionType.LOGIN_USER,
+                    payload: {
+                        user: response.data.user
+                    }
+                })
+                history.push("/");
+            }
+        } catch {
             authReducer({
-                type: AuthActionType.LOGIN_USER,
+                type: AuthActionType.ERROR_MODAL,
                 payload: {
-                    user: response.data.user
+                    errorMessage: "Wrong email or password provided"
                 }
             })
-            history.push("/");
         }
+        // else if (response.status === 400) {
+        //     authReducer({
+        //         type: AuthActionType.ERROR_MODAL,
+        //         payload: {
+        //             errorMessage: response.data.errorMessage
+        //         }
+        //     })
+        //     history.push("/login/");
+        // }
+        // else if (response.status === 401) {
+        //     console.log("BIG ERROR 401 BRUH");
+        //     authReducer({
+        //         type: AuthActionType.ERROR_MODAL,
+        //         payload: {
+        //             errorMessage: response.data.errorMessage
+        //         }
+        //     })
+        //     history.push("/login");
+        // }
     }
 
     auth.logoutUser = async function() {
@@ -114,6 +176,13 @@ function AuthContextProvider(props) {
         }
         console.log("user initials: " + initials);
         return initials;
+    }
+
+    auth.hideModals = () => {
+        authReducer({
+            type: AuthActionType.HIDE_MODALS,
+            payload: {}
+        });    
     }
 
     return (
