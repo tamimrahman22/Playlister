@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 
 import MUIRemoveSongModal from './MUIRemoveSongModal'
+import MUIEditSongModal from './MUIEditSongModal'
 
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
@@ -60,7 +61,7 @@ function SongCard(props) {
             draggable="true"
             onDoubleClick={handleClick}
         >
-            {index + 1}.
+            {index + 1}.&nbsp;
             <a
                 id={'song-' + index + '-link'}
                 className="song-link"
@@ -75,6 +76,7 @@ function SongCard(props) {
                 onClick={handleRemoveSong}
             />
             <MUIRemoveSongModal/>
+            <MUIEditSongModal/>
         </div>
     );
 }

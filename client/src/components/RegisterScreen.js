@@ -116,9 +116,8 @@ export default function RegisterScreen() {
                         </Button>
                         <Grid container justifyContent="center">
                             <Grid item>
-                                Already have an account?
                                 <Link href="/login/" variant="body2">
-                                    &nbsp;Sign in
+                                    Already have an account? Sign in
                                 </Link>
                             </Grid>
                         </Grid>

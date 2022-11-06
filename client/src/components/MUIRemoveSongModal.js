@@ -80,10 +80,10 @@ export default function MUIRemoveSongModal() {
                     value='Cancel' />
             </div>
         </div> */}
-        <header className="dialog-header">
+        <header className="modal-north">
         Remove {songTitle}?
                 </header>
-                <div className="modal-center-content">
+                <div className="modal-center">
                     Are you sure you wish to permanently remove {songTitle} from the playlist?
                 </div>
                 <div id="confirm-cancel-container">

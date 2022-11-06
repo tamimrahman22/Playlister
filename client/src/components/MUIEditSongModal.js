@@ -4,23 +4,43 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 
+// const style = {
+//     position: 'absolute',
+//     top: '50%',
+//     left: '50%',
+//     transform: 'translate(-50%, -50%)',
+//     width: 400,
+//     bgcolor: 'background.paper',
+//     border: '2px solid #000',
+//     boxShadow: 24,
+//     p: 4,
+// };
+
 const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
+    //bgcolor: 'background.paper',
+    //border: '2px solid #000',
+    //boxShadow: 24,
     p: 4,
 };
 
 export default function MUIEditSongModal() {
     const { store } = useContext(GlobalStoreContext);
-    const [ title, setTitle ] = useState(store.currentSong.title);
-    const [ artist, setArtist ] = useState(store.currentSong.artist);
-    const [ youTubeId, setYouTubeId ] = useState(store.currentSong.youTubeId);
+    // const [ title, setTitle ] = useState(store.currentSong.title);
+    // const [ artist, setArtist ] = useState(store.currentSong.artist);
+    // const [ youTubeId, setYouTubeId ] = useState(store.currentSong.youTubeId);
+    let title = "";
+    let artist = "";
+    let youTubeId = "";
+    if (store.currentSong !== null) {
+        title = store.currentSong.title;
+        artist = store.currentSong.artist;
+        youTubeId = store.currentSong.youTubeId;
+    }
 
     function handleConfirmEditSong() {
         let newSongData = {
@@ -36,25 +56,28 @@ export default function MUIEditSongModal() {
     }
 
     function handleUpdateTitle(event) {
-        setTitle(event.target.value);
+        // setTitle(event.target.value);
+        title = event.target.value;
     }
 
     function handleUpdateArtist(event) {
-        setArtist(event.target.value);
+        // setArtist(event.target.value);
+        artist = event.target.value;
     }
 
     function handleUpdateYouTubeId(event) {
-        setYouTubeId(event.target.value);
+        // setYouTubeId(event.target.value);
+        youTubeId = event.target.value;
     }
 
     return (
         <Modal
-            open={store.listMarkedForDeletion !== null}
+            open={store.currentModal === "EDIT_SONG"}
         >
             <Box sx={style}>
             <div
             id="edit-song-modal"
-            className="modal is-visible"
+            className="modal-dialog is-visible"
             data-animation="slideInOutLeft">
             <div
                 id='edit-song-root'
@@ -64,7 +87,7 @@ export default function MUIEditSongModal() {
                     className="modal-north">Edit Song</div>
                 <div
                     id="edit-song-modal-content"
-                    className="modal-center">
+                    className="modal-center-edit">
                     <div id="title-prompt" className="modal-prompt">Title:</div>
                     <input 
                         id="edit-song-modal-title-textfield" 
@@ -79,7 +102,7 @@ export default function MUIEditSongModal() {
                         type="text" 
                         defaultValue={artist} 
                         onChange={handleUpdateArtist} />
-                    <div id="you-tube-id-prompt" className="modal-prompt">You Tube Id:</div>
+                    <div id="you-tube-id-prompt" className="modal-prompt">YouTube Id:</div>
                     <input 
                         id="edit-song-modal-youTubeId-textfield" 
                         className='modal-textfield' 

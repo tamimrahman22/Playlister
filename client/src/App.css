@@ -395,6 +395,37 @@ input {
   text-align: center;
 }
 
+.modal-root > * {
+  padding: 1rem;
+}
+
+.modal-north {
+  font-size:32pt;
+  font-weight: bold;
+  /* background-color: #669966; */
+  color:white;
+}
+
+.modal-center {
+  font-size: 18pt;
+}
+
+.modal-center-edit {
+  display: grid;
+  grid-template-columns: 40% 55%;
+  grid-template-rows: 33% 33% 33%;
+  gap: 10px 20px;
+  font-size: 18pt;
+}
+
+.modal-south {
+  display:flex;
+  flex-direction: row;
+  /* background-color: lightgray; */
+  align-items: center;
+  justify-content: center;
+}
+
 /* ANIMATIONS
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 [data-animation] .modal-dialog {
