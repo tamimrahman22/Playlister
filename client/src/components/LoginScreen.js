@@ -26,7 +26,7 @@ export default function LoginScreen() {
         const formData = new FormData(event.currentTarget);
         auth.loginUser(
             formData.get('email'),
-            formData.get('password')
+            formData.get('password'),
         );
 
     };
@@ -86,7 +86,7 @@ export default function LoginScreen() {
                             autoComplete="current-password"
                         />
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
+                            control={<Checkbox value="remember" color="primary"/>}
                             label="Remember me"
                         />
                         <Button

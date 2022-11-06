@@ -25,7 +25,7 @@ function AuthContextProvider(props) {
         user: null,
         loggedIn: false,
         currentModal : CurrentModal.NONE,
-        errorMessage: null,
+        errorMessage: null
     });
     const history = useHistory();
 
@@ -63,7 +63,6 @@ function AuthContextProvider(props) {
                 })
             }
             case AuthActionType.ERROR_MODAL: {
-                console.log("error modal");
                 return setAuth({
                     currentModal: CurrentModal.ERROR_MODAL,
                     errorMessage: payload.errorMessage
@@ -118,7 +117,7 @@ function AuthContextProvider(props) {
     auth.loginUser = async function(email, password) {
         try {
             const response = await api.loginUser(email, password);
-            console.log("Response status: "+response.status);
+            console.log("Response status: "+response.data.errorMessage);
             if (response.status === 200) {
                 authReducer({
                     type: AuthActionType.LOGIN_USER,
