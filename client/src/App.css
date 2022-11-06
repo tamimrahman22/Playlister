@@ -317,7 +317,7 @@ input {
 /* THIS STYLE SHEET MANAGES STYLE FOR OUR MODAL, i.e. DIALOG BOX */
 
 .modal {
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
   right: 0;
