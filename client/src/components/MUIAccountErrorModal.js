@@ -30,7 +30,7 @@ export default function MUIAccountErrorModal() {
 
     return (
         <Modal
-            open={auth.errorMessage !== null}
+            open={auth.currentModal === "ERROR_MODAL"}
         >
             <Box sx={style}>
             <div className="modal-dialog">
