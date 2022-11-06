@@ -175,6 +175,7 @@ body {
   position: absolute;
   left: 0%;
   top: 90%;
+  margin-top:0.5%;
   width: 100%;
   height: 10%;
   background-color: #8e005e;
@@ -187,19 +188,18 @@ body {
 #list-selector-list {
   position: absolute;
   left: 0%;
-  top: 10%;
+  margin-top: 0.5%;
   width: 100%;
-  height: 75%;
+  height: 65%;
   display: flex;
   flex-direction: column;
   overflow: scroll;
-  padding-top: 50px;
 }
 
 #playlist-cards {
   position: absolute;
   left: 0%;
-  top: 10%;
+  margin-top: 0.5%;
   width: 100%;
   height: 75%;
   display: flex;

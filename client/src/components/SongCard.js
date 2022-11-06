@@ -1,9 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { GlobalStoreContext } from '../store'
 
-import MUIRemoveSongModal from './MUIRemoveSongModal'
-import MUIEditSongModal from './MUIEditSongModal'
-
 function SongCard(props) {
     const { store } = useContext(GlobalStoreContext);
     const [ draggedTo, setDraggedTo ] = useState(0);
@@ -75,8 +72,6 @@ function SongCard(props) {
                 value={"\u2715"}
                 onClick={handleRemoveSong}
             />
-            <MUIRemoveSongModal/>
-            <MUIEditSongModal/>
         </div>
     );
 }
