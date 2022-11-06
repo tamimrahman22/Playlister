@@ -47,7 +47,7 @@ export default function MUIAccountErrorModal() {
                         id="dialog-no-button"
                         className="modal-button"
                         onClick={handleCloseModal}
-                    >Cancel</button>
+                    >Close</button>
                 </div>
             </div>
             </Box>
