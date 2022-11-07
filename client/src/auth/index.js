@@ -104,11 +104,11 @@ function AuthContextProvider(props) {
                 })
                 history.push("/");
             }
-        } catch {
+        } catch (e) {
             authReducer({
                 type: AuthActionType.ERROR_MODAL,
                 payload: {
-                    errorMessage: "Please enter all required fields"
+                    errorMessage: e.response.data.errorMessage
                 }
             })
         }
@@ -127,11 +127,12 @@ function AuthContextProvider(props) {
                 })
                 history.push("/");
             }
-        } catch {
+        } catch (e){
+            console.log(e.response.data.errorMessage)
             authReducer({
                 type: AuthActionType.ERROR_MODAL,
                 payload: {
-                    errorMessage: "Wrong email or password provided"
+                    errorMessage: e.response.data.errorMessage
                 }
             })
         }

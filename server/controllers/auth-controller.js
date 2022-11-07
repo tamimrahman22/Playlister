@@ -36,6 +36,7 @@ loginUser = async (req, res) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
+            auth.errorMessage = "Please enter all required fields.";
             return res
                 .status(400)
                 .json({ errorMessage: "Please enter all required fields." });
@@ -44,6 +45,7 @@ loginUser = async (req, res) => {
         const existingUser = await User.findOne({ email: email });
         console.log("existingUser: " + existingUser);
         if (!existingUser) {
+            auth.errorMessage = "Wrong email or password provided.";
             return res
                 .status(401)
                 .json({
@@ -55,6 +57,7 @@ loginUser = async (req, res) => {
         const passwordCorrect = await bcrypt.compare(password, existingUser.passwordHash);
         if (!passwordCorrect) {
             console.log("Incorrect password");
+            auth.errorMessage = "Wrong email or password provided.";
             return res
                 .status(401)
                 .json({
@@ -99,12 +102,14 @@ registerUser = async (req, res) => {
         const { firstName, lastName, email, password, passwordVerify } = req.body;
         console.log("create user: " + firstName + " " + lastName + " " + email + " " + password + " " + passwordVerify);
         if (!firstName || !lastName || !email || !password || !passwordVerify) {
+            auth.errorMessage = "Please enter all required fields.";
             return res
                 .status(400)
                 .json({ errorMessage: "Please enter all required fields." });
         }
         console.log("all fields provided");
         if (password.length < 8) {
+            auth.errorMessage = "Please enter a password of at least 8 characters.";
             return res
                 .status(400)
                 .json({
@@ -113,6 +118,7 @@ registerUser = async (req, res) => {
         }
         console.log("password long enough");
         if (password !== passwordVerify) {
+            auth.errorMessage = "Please enter the same password twice.";
             return res
                 .status(400)
                 .json({
@@ -123,6 +129,7 @@ registerUser = async (req, res) => {
         const existingUser = await User.findOne({ email: email });
         console.log("existingUser: " + existingUser);
         if (existingUser) {
+            auth.errorMessage = "An account with this email address already exists.";
             return res
                 .status(400)
                 .json({
