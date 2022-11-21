@@ -41,7 +41,7 @@ export default function RegisterScreen() {
                         flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        height: '55vh',
+                        height: '65vh',
                     }}
                 >
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
