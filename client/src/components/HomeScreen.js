@@ -1,7 +1,9 @@
 import React, { useContext, useEffect } from 'react'
+import { useState } from 'react';
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
 import MUIDeleteModal from './MUIDeleteModal'
+import { Link } from 'react-router-dom'
 
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
@@ -19,6 +21,8 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import ReactPlayer from 'react-player'
 import YouTubePlayer from './YouTubePlayer';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 /*
     This React component lists all the top5 lists in the UI.
@@ -27,14 +31,47 @@ import YouTubePlayer from './YouTubePlayer';
 */
 const HomeScreen = () => {
     const { store } = useContext(GlobalStoreContext);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const isMenuOpen = Boolean(anchorEl);
 
     useEffect(() => {
         store.loadIdNamePairs();
     }, []);
 
-    function handleCreateNewList() {
-        store.createNewList();
-    }
+    const handleSortMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const menuId = 'primary-search-account-menu';
+    const menu = (
+        <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{
+                vertical: "bottom",
+                horizontal: 'right',
+            }}
+            id={menuId}
+            keepMounted
+            transformOrigin={{
+                vertical: "top",
+                horizontal: 'right',
+            }}
+            open={isMenuOpen}
+            onClose={handleMenuClose}
+        >
+            <MenuItem onClick={handleMenuClose}>Name (A - Z)</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Publish Date (Newest)</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Listens (High - Low)</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Likes (High - Low)</MenuItem>
+            <MenuItem onClick={handleMenuClose}>Dislikes (High - Low)</MenuItem>
+        
+        </Menu>
+    );
+
     let listCard = "";
     if (store) {
         listCard = 
@@ -99,10 +136,10 @@ const HomeScreen = () => {
                 <IconButton 
                     aria-label="sort-lists"
                     id="sort-lists-button"
-                    // onClick={}
+                    onClick={handleSortMenuOpen}
                     size="small"
                 >
-                    Sort By
+                    Sort By 
                     <SortIcon
                         fontSize="large"
                         style={{ fill: 'black' }} />
@@ -122,6 +159,7 @@ const HomeScreen = () => {
                     </Grid>
                 </Grid>
                 <Statusbar/>
+                {menu}
             </Box>
 )}
 
