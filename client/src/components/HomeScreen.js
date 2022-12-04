@@ -15,6 +15,10 @@ import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import { IconButton } from '@mui/material';
 import { TextField } from '@mui/material';
 import SortIcon from '@mui/icons-material/Sort';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import ReactPlayer from 'react-player'
+import YouTubePlayer from './YouTubePlayer';
 
 /*
     This React component lists all the top5 lists in the UI.
@@ -89,7 +93,8 @@ const HomeScreen = () => {
                         marginTop:5,
                         marginLeft:50,
                         marginRight:75
-                        }}/>
+                        }}
+                />
 
                 <IconButton 
                     aria-label="sort-lists"
@@ -102,16 +107,22 @@ const HomeScreen = () => {
                         fontSize="large"
                         style={{ fill: 'black' }} />
                 </IconButton>
-                
-            </div>
-            <List id="list-selector-list">
-                {
-                    listCard
-                }
-                <MUIDeleteModal />
-            </List>
-            <Statusbar/>
-        </Box>)
-}
+                </div>
+                <Grid container component="main">
+                    <Grid item xs={6}>
+                        <List id="list-selector-list">
+                            {
+                                listCard
+                            }
+                            <MUIDeleteModal />
+                        </List>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <YouTubePlayer />
+                    </Grid>
+                </Grid>
+                <Statusbar/>
+            </Box>
+)}
 
 export default HomeScreen;
