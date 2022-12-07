@@ -143,7 +143,7 @@ function ListCard(props) {
             {/* </ListItem> */}
         </Grid>
     
-    let songList = "no songs";
+    let songList = "";
     if (store.currentList) {
     songList = 
         <List 

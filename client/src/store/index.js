@@ -383,6 +383,7 @@ function GlobalStoreContextProvider(props) {
                         payload: playlist
                     });
                     // history.push("/playlist/" + playlist._id);
+                    history.push("/");
                 }
             }
         }

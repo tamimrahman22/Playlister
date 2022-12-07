@@ -103,22 +103,22 @@ const HomeScreen = () => {
                         style={{ fill: 'black' }} />
                 </IconButton>
                 <IconButton 
-                    aria-label="all-lists"
-                    id="all-lists-button"
-                    // onClick={}
-                    size="small"
-                >
-                    <PersonOutlineOutlinedIcon
-                        fontSize="large"
-                        style={{ fill: 'black' }} />
-                </IconButton>
-                <IconButton 
                     aria-label="user-lists"
                     id="user-lists-button"
                     // onClick={}
                     size="small"
                 >
                     <GroupsOutlinedIcon
+                        fontSize="large"
+                        style={{ fill: 'black' }} />
+                </IconButton>
+                <IconButton 
+                    aria-label="all-lists"
+                    id="all-lists-button"
+                    // onClick={}
+                    size="small"
+                >
+                    <PersonOutlineOutlinedIcon
                         fontSize="large"
                         style={{ fill: 'black' }} />
                 </IconButton>
@@ -146,6 +146,7 @@ const HomeScreen = () => {
                         fontSize="large"
                         style={{ fill: 'black' }} />
                 </IconButton>
+                
                 </div>
                 <Grid container component="main">
                     <Grid item xs={6}>

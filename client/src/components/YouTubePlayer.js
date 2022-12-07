@@ -1,5 +1,7 @@
 import React from "react";
 import ReactPlayer from 'react-player'
+import { useContext, useState } from 'react'
+import { GlobalStoreContext } from '../store'
 
 import { Box, Typography } from '@mui/material';
 import { ButtonGroup } from '@mui/material';
@@ -12,26 +14,70 @@ import StopRoundedIcon from '@mui/icons-material/StopRounded';
 /** YouTube Player */
 
 export default function YouTubePlayer() {
+    const { store } = useContext(GlobalStoreContext);
+    const [ songNum, setSongNum ] = useState(0); 
+    const [ playVid, setPlayVid ] = useState(false);
+    
+    let playlist = null;
+    let title = null;
+    let artist = null;
+    let url = [];
+    if(store.currentList) {
+        if(store.currentList.songs.length!=0) {
+            playlist = store.currentList;
+            title = store.currentList.songs[songNum].title;
+            artist = store.currentList.songs[songNum].artist;
+            store.currentList.songs.map((song)=>url.push('https://www.youtube.com/watch?v='+song.youTubeId));
+        }
+    }
+
+    console.log("{youtube-player}");
+    console.log("{playlist}",playlist);
+    console.log("{songNum}",songNum);
+    console.log("{title}",title);
+    console.log("{artist}",artist);
+    console.log("{url}",url);
+
+    function updateInfo() {
+        setSongNum((songNum+1) % store.currentList.songs.length);
+    }
+
+    function next() {
+        setSongNum((songNum+1) % store.currentList.songs.length);
+    }
+
+    function prev() {
+        if(songNum!=0){
+            setSongNum((songNum-1) % store.currentList.songs.length);
+        }
+    }
     return (
         <Box id="youtube-player">
-            <ReactPlayer width="100%" url='https://www.youtube.com/watch?v=ysz5S6PUM-U' />
+            <ReactPlayer 
+                width="100%" 
+                controls={true}
+                url={url[songNum]}
+                playing={playVid}
+                // onStart={()=>setPlayVid(true)}
+                onEnded = {()=>updateInfo()}
+                />
 
             <div>
                 <h3 style={{textAlign:"center"}}>Now Playing</h3>
-                <h3 style={{paddingLeft:10}}>Playlist: 
+                <h3 style={{paddingLeft:10}}>Playlist: {playlist?playlist.name:""}
                     <br></br>
-                    Song #
+                    Song # {playlist?songNum+1:""}
                     <br></br>
-                    Title:
+                    Title: {playlist?playlist.songs[songNum].title:""}
                     <br></br>
-                    Artist:
+                    Artist: {playlist?playlist.songs[songNum].artist:""}
                 </h3>
 
                 <Typography align="center">
                     <IconButton 
                         aria-label="prev"
                         id="prev-button"
-                        // onClick={}
+                        onClick={()=>prev()}
                         size="small"
                     >
                         <SkipPreviousRoundedIcon
@@ -41,7 +87,7 @@ export default function YouTubePlayer() {
                     <IconButton 
                         aria-label="stop"
                         id="stop-button"
-                        // onClick={}
+                        onClick={()=>setPlayVid(false)}
                         size="small"
                     >
                         <StopRoundedIcon
@@ -51,7 +97,7 @@ export default function YouTubePlayer() {
                     <IconButton 
                         aria-label="play"
                         id="play-button"
-                        // onClick={}
+                        onClick={()=>setPlayVid(true)}
                         size="small"
                     >
                         <PlayArrowRoundedIcon
@@ -61,7 +107,7 @@ export default function YouTubePlayer() {
                     <IconButton 
                         aria-label="next"
                         id="next-button"
-                        // onClick={}
+                        onClick={()=>next()}
                         size="small"
                     >
                         <SkipNextRoundedIcon
