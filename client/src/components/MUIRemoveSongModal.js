@@ -3,6 +3,7 @@ import GlobalStoreContext from '../store';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import { Button } from '@mui/material';
 
 // const style = {
 //     position: 'absolute',
@@ -57,29 +58,6 @@ export default function MUIRemoveSongModal() {
         id="remove-song-modal"
         className={modalClass}
         data-animation="slideInOutLeft">
-        {/* <div className="modal-root" id='verify-remove-song-root'>
-            <div className="dialog-header">
-                Remove {songTitle}?
-            </div>
-            <div className="modal-center">
-                <div className="modal-center-content">
-                    Are you sure you wish to permanently remove {songTitle} from the playlist?
-                </div>
-            </div>
-            <div className="modal-south">
-                <input type="button" 
-                    id="remove-song-confirm-button" 
-                    className="modal-button" 
-                    onClick={handleConfirmRemoveSong} 
-                    value='Confirm' />
-                <input 
-                    type="button" 
-                    id="remove-song-cancel-button" 
-                    className="modal-button" 
-                    onClick={handleCancelRemoveSong} 
-                    value='Cancel' />
-            </div>
-        </div> */}
         <header className="modal-north">
         Remove {songTitle}?
                 </header>
@@ -87,16 +65,23 @@ export default function MUIRemoveSongModal() {
                     Are you sure you wish to permanently remove {songTitle} from the playlist?
                 </div>
                 <div id="confirm-cancel-container">
-                    <button
+                    <Button
                         id="dialog-yes-button"
                         className="modal-button"
                         onClick={handleConfirmRemoveSong}
-                    >Confirm</button>
-                    <button
+                        variant="contained"
+                        sx={{ p: 1}}
+                        color='success'
+                    >Confirm</Button>
+                    &nbsp;
+                    <Button
                         id="dialog-no-button"
                         className="modal-button"
                         onClick={handleCancelRemoveSong}
-                    >Cancel</button>
+                        variant="contained"
+                        sx={{ p: 1}}
+                        color='error'
+                    >Cancel</Button>
                 </div>
     </div>
             </Box>

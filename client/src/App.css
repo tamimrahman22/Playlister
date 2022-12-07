@@ -400,13 +400,15 @@ input {
   position: relative;
   max-width: 800px;
   max-height: 80vh;
-  background: #787f8ab9;
+  background: #4e545f;
   overflow: auto;
   cursor: default;
   border-width: 5px;
   border-radius: 10px;
   border-style: groove;
   border-color: #540b3c;
+  color: white;
+  text-align: center;
 }
 
 .modal-dialog > * {

@@ -3,6 +3,7 @@ import GlobalStoreContext from '../store';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import { Button } from '@mui/material';
 
 // const style = {
 //     position: 'absolute',
@@ -111,18 +112,21 @@ export default function MUIEditSongModal() {
                         onChange={handleUpdateYouTubeId} />
                 </div>
                 <div className="modal-south">
-                    <input 
-                        type="button" 
+                    <Button 
                         id="edit-song-confirm-button" 
                         className="modal-button" 
-                        value='Confirm' 
-                        onClick={handleConfirmEditSong} />
-                    <input 
-                        type="button" 
+                        onClick={handleConfirmEditSong} 
+                        variant="contained"
+                        sx={{ p: 1}}
+                        color='success'>Confirm</Button>
+                        &nbsp;
+                    <Button 
                         id="edit-song-cancel-button" 
                         className="modal-button" 
-                        value='Cancel' 
-                        onClick={handleCancelEditSong} />
+                        onClick={handleCancelEditSong} 
+                        variant="contained"
+                        sx={{ p: 1}}
+                        color='error'>Cancel</Button>
                 </div>
             </div>
         </div>

@@ -3,6 +3,7 @@ import GlobalStoreContext from '../store';
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import { Button } from '@mui/material';
 
 const style = {
     position: 'absolute',
@@ -39,16 +40,23 @@ export default function MUIDeleteModal() {
                     Delete the <i>{name}</i> playlist?
                 </header>
                 <div id="confirm-cancel-container">
-                    <button
+                    <Button
                         id="dialog-yes-button"
                         className="modal-button"
                         onClick={handleDeleteList}
-                    >Confirm</button>
-                    <button
+                        variant="contained"
+                        sx={{ p: 1}}
+                        color='success'
+                    >Confirm</Button>
+                    &nbsp;
+                    <Button
                         id="dialog-no-button"
                         className="modal-button"
                         onClick={handleCloseModal}
-                    >Cancel</button>
+                        variant="contained"
+                        sx={{ p: 1}}
+                        color='error'
+                    >Cancel</Button>
                 </div>
             </div>
             </Box>
