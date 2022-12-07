@@ -31,7 +31,8 @@ export const GlobalStoreActionType = {
     EDIT_SONG: "EDIT_SONG",
     REMOVE_SONG: "REMOVE_SONG",
     HIDE_MODALS: "HIDE_MODALS",
-    DUPLICATE_LIST: "DUPLICATE_LIST"
+    DUPLICATE_LIST: "DUPLICATE_LIST",
+    SET_PUBLISH_DATE: "SET_PUBLISH_DATE"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -57,7 +58,8 @@ function GlobalStoreContextProvider(props) {
         newListCounter: 0,
         listNameActive: false,
         listIdMarkedForDeletion: null,
-        listMarkedForDeletion: null
+        listMarkedForDeletion: null,
+        publishDate: null,
     });
     const history = useHistory();
 
@@ -221,6 +223,20 @@ function GlobalStoreContextProvider(props) {
                     listNameActive: false,
                     listIdMarkedForDeletion: null,
                     listMarkedForDeletion: null
+                })
+            }
+            case GlobalStoreActionType.SET_PUBLISH_DATE: {                
+                return setStore({
+                    currentModal : CurrentModal.NONE,
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    currentSongIndex: -1,
+                    currentSong: null,
+                    newListCounter: store.newListCounter,
+                    listNameActive: false,
+                    listIdMarkedForDeletion: null,
+                    listMarkedForDeletion: null,
+                    publishDate: payload
                 })
             }
             default:
@@ -412,7 +428,7 @@ function GlobalStoreContextProvider(props) {
             let response = await api.getPlaylistById(id);
             if (response.data.success) {
                 let playlist = response.data.playlist;
-
+                playlist.listens += 1;
                 response = await api.updatePlaylistById(playlist._id, playlist);
                 if (response.data.success) {
                     storeReducer({
@@ -536,10 +552,15 @@ function GlobalStoreContextProvider(props) {
         asyncUpdateCurrentList();
     }
 
-    store.publishPlaylist = function() {
+    store.publishPlaylist = function(publishDate) {
+        console.log(publishDate)
         console.log(store.currentList.published);
         store.currentList.published = true;
         console.log(store.currentList.published);
+        storeReducer({
+            type: GlobalStoreActionType.SET_PUBLISH_DATE,
+            payload: publishDate
+        });
         store.updateCurrentList();
     }
     store.undo = function () {

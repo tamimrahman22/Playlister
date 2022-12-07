@@ -53,7 +53,13 @@ function ListCard(props) {
     }
 
     function handlePublish() {
-        store.publishPlaylist();
+        let date = new Date();
+        let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let month = months[date.getMonth()];
+        let day = date.getDay();
+        let year = date.getYear();
+        let publishDate = month+" "+day+", "+year;
+        store.publishPlaylist(publishDate);
     }
 
     function handleLoadList(event, id) {
@@ -230,8 +236,10 @@ function ListCard(props) {
                 </AccordionDetails>
             </Accordion>
         </div>
+        
 
     if(store.currentList != null && store.currentList.published) {
+        console.log(store.publishDate)
         cardInfo = 
         <Grid 
             container 
@@ -246,7 +254,7 @@ function ListCard(props) {
             <Box sx={{ p: 1, flexGrow: 1 }}>
                 <h3>{idNamePair.name}</h3>
                 <p>By: {auth.user.firstName} {auth.user.lastName}</p>
-                <p>Published:{store.currentList.published}</p>
+                <p>Published: {store.publishDate}</p>
             </Box>
             </Grid>
             <Grid item xs={6}>
