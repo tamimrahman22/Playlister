@@ -39,13 +39,22 @@ export const updatePlaylistById = (id, playlist) => {
         playlist : playlist
     })
 }
+export const duplicatePlaylist = (listName, songs, userEmail) => {
+    return api.post(`/playlist/`, {
+        // SPECIFY THE PAYLOAD
+        name: listName,
+        songs: songs,
+        ownerEmail: userEmail
+    })
+}
 
 const apis = {
     createPlaylist,
     deletePlaylistById,
     getPlaylistById,
     getPlaylistPairs,
-    updatePlaylistById
+    updatePlaylistById,
+    duplicatePlaylist
 }
 
 export default apis

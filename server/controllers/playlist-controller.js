@@ -186,6 +186,7 @@ updatePlaylist = async (req, res) => {
 
                     list.name = body.playlist.name;
                     list.songs = body.playlist.songs;
+                    list.published = body.playlist.published;
                     list
                         .save()
                         .then(() => {
@@ -213,11 +214,51 @@ updatePlaylist = async (req, res) => {
         asyncFindUser(playlist);
     })
 }
+
+duplicatePlaylist = (req, res) => {
+    const body = req.body;
+    console.log("duplicatePlaylist body: " + JSON.stringify(body));
+
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a Playlist',
+        })
+    }
+
+    const playlist = new Playlist(body);
+    console.log("playlist: " + playlist.toString());
+    if (!playlist) {
+        return res.status(400).json({ success: false, error: err })
+    }
+
+    User.findOne({ _id: req.userId }, (err, user) => {
+        console.log("user found: " + JSON.stringify(user));
+        user.playlists.push(playlist._id);
+        user
+            .save()
+            .then(() => {
+                playlist
+                    .save()
+                    .then(() => {
+                        return res.status(201).json({
+                            playlist: playlist
+                        })
+                    })
+                    .catch(error => {
+                        return res.status(400).json({
+                            errorMessage: 'Playlist Not Created!'
+                        })
+                    })
+            });
+    })
+}
 module.exports = {
     createPlaylist,
     deletePlaylist,
     getPlaylistById,
     getPlaylistPairs,
     getPlaylists,
-    updatePlaylist
+    updatePlaylist,
+    duplicatePlaylist
 }

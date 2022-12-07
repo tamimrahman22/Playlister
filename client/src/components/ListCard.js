@@ -36,6 +36,11 @@ function ListCard(props) {
     const [text, setText] = useState("");
     const { idNamePair, selected } = props;
     const { auth } = useContext(AuthContext);
+    const [ expanded, setExpanded ] = useState(false);
+
+    const handleChange = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
+    }
 
     function handleAddNewSong() {
         store.addNewSong();
@@ -45,6 +50,10 @@ function ListCard(props) {
     }
     function handleRedo() {
         store.redo();
+    }
+
+    function handlePublish() {
+        store.publishPlaylist();
     }
 
     function handleLoadList(event, id) {
@@ -92,6 +101,10 @@ function ListCard(props) {
         setText(event.target.value);
     }
 
+    function handleDuplicate() {
+        store.duplicateCurrentList(idNamePair._id);
+    }
+
     let selectClass = "unselected-list-card";
     if (selected) {
         selectClass = "selected-list-card";
@@ -101,14 +114,6 @@ function ListCard(props) {
         cardStatus = true;
     }
 
-    let published = "";
-    // if (store.isPublished(idNamePair._id)) {
-    //     published = "Published: "
-    // }
-    let listens = "";
-    // if (store.numOfListens(idNamePair._id)) {
-    //     listens = "Listens: "
-    // }
     let cardInfo = 
         <Grid 
             container 
@@ -119,28 +124,11 @@ function ListCard(props) {
                 handleLoadList(event, idNamePair._id)
             }}>
             <Grid item xs={6}>
-            {/* <ListItem> */}
             <Box sx={{ p: 1, flexGrow: 1 }}>
                 <h3>{idNamePair.name}</h3>
                 <p>By: {auth.user.firstName} {auth.user.lastName}</p>
-                <p>{published}</p>
             </Box>
             </Grid>
-            <Grid item xs={6}>
-                <Box sx={{p:2}}>
-                <IconButton aria-label='like-button'>
-                    <ThumbUpTwoToneIcon style={{fontSize:'28pt'}} className="playlister-button"/>
-                    &nbsp;100
-                </IconButton>
-                <IconButton aria-label='dislike-button'>
-                    <ThumbDownTwoToneIcon style={{fontSize:'28pt'}} className="playlister-button"/>
-                    &nbsp;100
-                </IconButton>
-                </Box>
-                <p float="right">{listens}</p>
-            </Grid>
-            
-            {/* </ListItem> */}
         </Grid>
     
     let songList = "";
@@ -166,7 +154,11 @@ function ListCard(props) {
     
     let cardElement =
         <div>
-            <Accordion style={{backgroundColor:'rgb(113, 102, 102)'}}>
+            <Accordion 
+                style={{backgroundColor:'rgb(113, 102, 102)'}}
+                expanded={expanded === idNamePair._id}
+                onChange={handleChange(idNamePair._id)}
+            >
                 <AccordionSummary
                 expandIcon={<ExpandMoreIcon onClick={(event) => {
                     handleLoadList(event, idNamePair._id)
@@ -211,7 +203,8 @@ function ListCard(props) {
                         <Box sx={{ p: 0.5 }} >
                             <Button 
                                 variant="contained"
-                                aria-label='publish'> 
+                                aria-label='publish'
+                                onClick={handlePublish}> 
                                     Publish 
                             </Button>
                         </Box>
@@ -228,7 +221,8 @@ function ListCard(props) {
                         <Box sx={{ p: 0.5 }}>
                             <Button 
                                 variant="contained"
-                                aria-label='duplicate'> 
+                                aria-label='duplicate'
+                                onClick={handleDuplicate}> 
                                     Duplicate 
                             </Button>
                         </Box>
@@ -236,6 +230,86 @@ function ListCard(props) {
                 </AccordionDetails>
             </Accordion>
         </div>
+
+    if(store.currentList != null && store.currentList.published) {
+        cardInfo = 
+        <Grid 
+            container 
+            component="main" 
+            spacing={2}
+            onDoubleClick={handleToggleEdit}
+            onClick={(event) => {
+                handleLoadList(event, idNamePair._id)
+            }}>
+            <Grid item xs={6}>
+            {/* <ListItem> */}
+            <Box sx={{ p: 1, flexGrow: 1 }}>
+                <h3>{idNamePair.name}</h3>
+                <p>By: {auth.user.firstName} {auth.user.lastName}</p>
+                <p>Published:{store.currentList.published}</p>
+            </Box>
+            </Grid>
+            <Grid item xs={6}>
+                <Box sx={{p:2}}>
+                <IconButton aria-label='like-button'>
+                    <ThumbUpTwoToneIcon style={{fontSize:'28pt'}} className="playlister-button"/>
+                    &nbsp;{store.currentList.likes}
+                </IconButton>
+                <IconButton aria-label='dislike-button'>
+                    <ThumbDownTwoToneIcon style={{fontSize:'28pt'}} className="playlister-button"/>
+                    &nbsp;{store.currentList.dislikes}
+                </IconButton>
+                </Box>
+                <p float="right">Listens:{store.currentList.listens}</p>
+            </Grid>
+            
+            {/* </ListItem> */}
+        </Grid>
+
+        
+        cardElement =
+        <div>
+            <Accordion 
+                style={{backgroundColor:'rgb(113, 102, 102)'}}
+                expanded={expanded === idNamePair._id}
+                onChange={handleChange(idNamePair._id)}
+            >
+                <AccordionSummary
+                expandIcon={<ExpandMoreIcon onClick={(event) => {
+                    handleLoadList(event, idNamePair._id)
+                }}/> }
+                aria-controls="playlist-content"
+                id="playlist-header"
+                >
+                    { cardInfo }
+                </AccordionSummary>
+                <AccordionDetails id="playlist-details">
+                    { songList }
+                    <ListItem style={{display:'flex', justifyContent:'flex-end'}}>
+                        <Box sx={{ p: 0.5 }} >
+                            <Button 
+                                variant="contained"
+                                onClick={(event) => {
+                                    handleDeleteList(event, idNamePair._id)
+                                }} 
+                                aria-label='delete'> 
+                                    Delete 
+                            </Button>
+                        </Box>
+                        <Box sx={{ p: 0.5 }}>
+                            <Button 
+                                variant="contained"
+                                aria-label='duplicate'
+                                onClick={handleDuplicate}> 
+                                    Duplicate 
+                            </Button>
+                        </Box>
+                    </ListItem>
+                </AccordionDetails>
+            </Accordion>
+        </div>
+    }
+
        
 
     if (editActive) {

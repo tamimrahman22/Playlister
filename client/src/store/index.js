@@ -30,7 +30,8 @@ export const GlobalStoreActionType = {
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     EDIT_SONG: "EDIT_SONG",
     REMOVE_SONG: "REMOVE_SONG",
-    HIDE_MODALS: "HIDE_MODALS"
+    HIDE_MODALS: "HIDE_MODALS",
+    DUPLICATE_LIST: "DUPLICATE_LIST"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -209,6 +210,19 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null
                 });
             }
+            case GlobalStoreActionType.DUPLICATE_LIST: {                
+                return setStore({
+                    currentModal : CurrentModal.NONE,
+                    idNamePairs: store.idNamePairs,
+                    currentList: store.currentList,
+                    currentSongIndex: -1,
+                    currentSong: null,
+                    newListCounter: store.newListCounter + 1,
+                    listNameActive: false,
+                    listIdMarkedForDeletion: null,
+                    listMarkedForDeletion: null
+                })
+            }
             default:
                 return store;
         }
@@ -282,6 +296,29 @@ function GlobalStoreContextProvider(props) {
         }
         else {
             console.log("API FAILED TO CREATE A NEW LIST");
+        }
+    }
+
+    //THIS FUNCTION DUPLICATES THE CURRENT PLAYLIST
+    store.duplicateCurrentList = async function (id) {
+        const response = await api.duplicatePlaylist(store.currentList.name, store.currentList.songs, auth.user.email);
+        console.log("duplicateList response: " + response);
+        if (response.status === 201) {
+            tps.clearAllTransactions();
+            let newList = response.data.playlist;
+            storeReducer({
+                type: GlobalStoreActionType.DUPLICATE_LIST,
+                payload: newList
+            }
+            );
+
+            // IF IT'S A VALID LIST THEN LET'S START EDITING IT
+            // history.push("/playlist/" + newList._id);
+            store.loadIdNamePairs();
+            history.push("/");
+        }
+        else {
+            console.log("API FAILED TO DUPLICATE LIST");
         }
     }
 
@@ -497,6 +534,13 @@ function GlobalStoreContextProvider(props) {
             }
         }
         asyncUpdateCurrentList();
+    }
+
+    store.publishPlaylist = function() {
+        console.log(store.currentList.published);
+        store.currentList.published = true;
+        console.log(store.currentList.published);
+        store.updateCurrentList();
     }
     store.undo = function () {
         tps.undoTransaction();

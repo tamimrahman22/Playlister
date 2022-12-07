@@ -59,12 +59,12 @@ function SongCard(props) {
             onDoubleClick={handleClick}
         >
             {index + 1}.&nbsp;
-            <a
+            {/* <a
                 id={'song-' + index + '-link'}
                 className="song-link"
-                href={"https://www.youtube.com/watch?v=" + song.youTubeId}>
+                href={"https://www.youtube.com/watch?v=" + song.youTubeId}> */}
                 {song.title} by {song.artist}
-            </a>
+            {/* </a> */}
             <input
                 type="button"
                 id={"remove-song-" + index}
