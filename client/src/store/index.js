@@ -263,7 +263,7 @@ function GlobalStoreContextProvider(props) {
 
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function () {
-        let newListName = "Untitled Playlist #" + (store.idNamePairs.length+1);
+        let newListName = "Untitled Playlist #" + (store.idNamePairs.length);
         const response = await api.createPlaylist(newListName, [], auth.user.email);
         console.log("createNewList response: " + response);
         if (response.status === 201) {
@@ -276,7 +276,9 @@ function GlobalStoreContextProvider(props) {
             );
 
             // IF IT'S A VALID LIST THEN LET'S START EDITING IT
-            history.push("/playlist/" + newList._id);
+            // history.push("/playlist/" + newList._id);
+            store.loadIdNamePairs();
+            history.push("/");
         }
         else {
             console.log("API FAILED TO CREATE A NEW LIST");
@@ -380,7 +382,7 @@ function GlobalStoreContextProvider(props) {
                         type: GlobalStoreActionType.SET_CURRENT_LIST,
                         payload: playlist
                     });
-                    history.push("/playlist/" + playlist._id);
+                    // history.push("/playlist/" + playlist._id);
                 }
             }
         }

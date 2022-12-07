@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
 import MUIDeleteModal from './MUIDeleteModal'
+import MUIEditSongModal from './MUIEditSongModal'
+import MUIRemoveSongModal from './MUIRemoveSongModal'
 import { Link } from 'react-router-dom'
 
 import AddIcon from '@mui/icons-material/Add';
@@ -152,6 +154,8 @@ const HomeScreen = () => {
                                 listCard
                             }
                             <MUIDeleteModal />
+                            <MUIEditSongModal />
+                            <MUIRemoveSongModal />
                         </List>
                     </Grid>
                     <Grid item xs={6}>

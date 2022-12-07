@@ -178,6 +178,10 @@ function AuthContextProvider(props) {
         return initials;
     }
 
+    auth.getUser = function() {
+        return auth.user;
+    }
+
     auth.hideModals = () => {
         authReducer({
             type: AuthActionType.HIDE_MODALS,
