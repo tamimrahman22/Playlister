@@ -31,8 +31,7 @@ export const GlobalStoreActionType = {
     EDIT_SONG: "EDIT_SONG",
     REMOVE_SONG: "REMOVE_SONG",
     HIDE_MODALS: "HIDE_MODALS",
-    DUPLICATE_LIST: "DUPLICATE_LIST",
-    SET_PUBLISH_DATE: "SET_PUBLISH_DATE"
+    DUPLICATE_LIST: "DUPLICATE_LIST"
 }
 
 // WE'LL NEED THIS TO PROCESS TRANSACTIONS
@@ -121,7 +120,7 @@ function GlobalStoreContextProvider(props) {
                 return setStore({
                     currentModal : CurrentModal.NONE,
                     idNamePairs: payload,
-                    currentList: null,
+                    currentList: store.currentList,
                     currentSongIndex: -1,
                     currentSong: null,
                     newListCounter: store.newListCounter,
@@ -225,20 +224,6 @@ function GlobalStoreContextProvider(props) {
                     listMarkedForDeletion: null
                 })
             }
-            case GlobalStoreActionType.SET_PUBLISH_DATE: {                
-                return setStore({
-                    currentModal : CurrentModal.NONE,
-                    idNamePairs: store.idNamePairs,
-                    currentList: store.currentList,
-                    currentSongIndex: -1,
-                    currentSong: null,
-                    newListCounter: store.newListCounter,
-                    listNameActive: false,
-                    listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null,
-                    publishDate: payload
-                })
-            }
             default:
                 return store;
         }
@@ -287,6 +272,7 @@ function GlobalStoreContextProvider(props) {
             type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
             payload: {}
         });
+        // store.loadIdNamePairs();
         history.push("/");
         tps.clearAllTransactions();
     }
@@ -428,14 +414,18 @@ function GlobalStoreContextProvider(props) {
             let response = await api.getPlaylistById(id);
             if (response.data.success) {
                 let playlist = response.data.playlist;
-                playlist.listens += 1;
+                if(playlist.published){
+                    playlist.listens += 1;
+                }
                 response = await api.updatePlaylistById(playlist._id, playlist);
                 if (response.data.success) {
+                    store.currentList = playlist;
                     storeReducer({
                         type: GlobalStoreActionType.SET_CURRENT_LIST,
                         payload: playlist
                     });
                     // history.push("/playlist/" + playlist._id);
+                    store.loadIdNamePairs();
                     history.push("/");
                 }
             }
@@ -552,16 +542,23 @@ function GlobalStoreContextProvider(props) {
         asyncUpdateCurrentList();
     }
 
-    store.publishPlaylist = function(publishDate) {
-        console.log(publishDate)
-        console.log(store.currentList.published);
-        store.currentList.published = true;
-        console.log(store.currentList.published);
-        storeReducer({
-            type: GlobalStoreActionType.SET_PUBLISH_DATE,
-            payload: publishDate
-        });
-        store.updateCurrentList();
+    store.publishPlaylist = function(id, publishDate) {
+        async function asyncGetPlaylist(id) {
+            let response = await api.getPlaylistById(id);
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+                playlist.publishDate = publishDate;
+                playlist.published = true;
+                async function updateList(playlist) {
+                    response = await api.updatePlaylistById(playlist._id, playlist);
+                    if (response.data.success) {
+                        store.loadIdNamePairs();
+                    }
+                }
+                updateList(playlist);
+            }
+        }
+        asyncGetPlaylist(id);
     }
     store.undo = function () {
         tps.undoTransaction();

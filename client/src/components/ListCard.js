@@ -36,11 +36,9 @@ function ListCard(props) {
     const [text, setText] = useState("");
     const { idNamePair, selected } = props;
     const { auth } = useContext(AuthContext);
-    const [ expanded, setExpanded ] = useState(false);
+    // const [ expanded, setExpanded ] = useState(false);
 
-    const handleChange = (panel) => (event, isExpanded) => {
-        setExpanded(isExpanded ? panel : false);
-    }
+    
 
     function handleAddNewSong() {
         store.addNewSong();
@@ -56,10 +54,10 @@ function ListCard(props) {
         let date = new Date();
         let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         let month = months[date.getMonth()];
-        let day = date.getDay();
-        let year = date.getYear();
+        let day = date.getDate();
+        let year = 1900+date.getYear();
         let publishDate = month+" "+day+", "+year;
-        store.publishPlaylist(publishDate);
+        store.publishPlaylist(idNamePair._id,publishDate);
     }
 
     function handleLoadList(event, id) {
@@ -111,6 +109,12 @@ function ListCard(props) {
         store.duplicateCurrentList(idNamePair._id);
     }
 
+    function handleCloseCurrentList(event) {
+        console.log("CLOSING DA LIST");
+        id="";
+        store.closeCurrentList();
+    }
+
     let selectClass = "unselected-list-card";
     if (selected) {
         selectClass = "selected-list-card";
@@ -157,20 +161,34 @@ function ListCard(props) {
         </List>;
     }
 
+    let id="";
+    if (store.currentList){
+        id = store.currentList._id;
+    }
+
     
     let cardElement =
         <div>
             <Accordion 
                 style={{backgroundColor:'rgb(113, 102, 102)'}}
-                expanded={expanded === idNamePair._id}
-                onChange={handleChange(idNamePair._id)}
+                expanded={id === idNamePair._id}
+
+                // onChange={handleChange(idNamePair._id)}
             >
                 <AccordionSummary
-                expandIcon={<ExpandMoreIcon onClick={(event) => {
-                    handleLoadList(event, idNamePair._id)
-                }}/> }
+                expandIcon={<ExpandMoreIcon 
+                    onClick={(event) => {
+                        id === idNamePair._id ? handleCloseCurrentList(event): handleLoadList(event, idNamePair._id)
+                    }}
+                    sx={{
+                        pointerEvents: "auto"
+                    }}
+                    fontSize="large"/> }
                 aria-controls="playlist-content"
                 id="playlist-header"
+                sx={{
+                    pointerEvents: "none"
+                  }}
                 >
                     { cardInfo }
                 </AccordionSummary>
@@ -237,8 +255,7 @@ function ListCard(props) {
             </Accordion>
         </div>
         
-
-    if(store.currentList != null && store.currentList.published) {
+    if(idNamePair.playlist.published) {
         console.log(store.publishDate)
         cardInfo = 
         <Grid 
@@ -254,21 +271,24 @@ function ListCard(props) {
             <Box sx={{ p: 1, flexGrow: 1 }}>
                 <h3>{idNamePair.name}</h3>
                 <p>By: {auth.user.firstName} {auth.user.lastName}</p>
-                <p>Published: {store.publishDate}</p>
+                <p>Published: {idNamePair.playlist.publishDate}</p>
             </Box>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} >
                 <Box sx={{p:2}}>
                 <IconButton aria-label='like-button'>
                     <ThumbUpTwoToneIcon style={{fontSize:'28pt'}} className="playlister-button"/>
-                    &nbsp;{store.currentList.likes}
+                    &nbsp;{idNamePair.playlist.likes}
                 </IconButton>
                 <IconButton aria-label='dislike-button'>
                     <ThumbDownTwoToneIcon style={{fontSize:'28pt'}} className="playlister-button"/>
-                    &nbsp;{store.currentList.dislikes}
+                    &nbsp;{idNamePair.playlist.dislikes}
                 </IconButton>
                 </Box>
-                <p float="right">Listens:{store.currentList.listens}</p>
+                <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"><p>Listens:{idNamePair.playlist.listens}</p></Box>
             </Grid>
             
             {/* </ListItem> */}
@@ -279,15 +299,23 @@ function ListCard(props) {
         <div>
             <Accordion 
                 style={{backgroundColor:'rgb(113, 102, 102)'}}
-                expanded={expanded === idNamePair._id}
-                onChange={handleChange(idNamePair._id)}
+                expanded={id === idNamePair._id}
+                // onChange={handleChange(idNamePair._id)}
             >
                 <AccordionSummary
-                expandIcon={<ExpandMoreIcon onClick={(event) => {
-                    handleLoadList(event, idNamePair._id)
-                }}/> }
+                expandIcon={<ExpandMoreIcon 
+                    sx={{
+                        pointerEvents: "auto"
+                    }}
+                    onClick={(event) => {
+                        id === idNamePair._id ? handleCloseCurrentList(event): handleLoadList(event, idNamePair._id)
+                    }}
+                    fontSize="large"/> }
                 aria-controls="playlist-content"
                 id="playlist-header"
+                sx={{
+                    pointerEvents: "none"
+                  }}
                 >
                     { cardInfo }
                 </AccordionSummary>
