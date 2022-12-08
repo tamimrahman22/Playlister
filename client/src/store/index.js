@@ -280,7 +280,8 @@ function GlobalStoreContextProvider(props) {
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function () {
         let newListName = "Untitled Playlist #" + (store.idNamePairs.length);
-        const response = await api.createPlaylist(newListName, [], auth.user.email);
+        let author = auth.user.firstName + " " + auth.user.lastName;
+        const response = await api.createPlaylist(newListName, [], auth.user.email,author);
         console.log("createNewList response: " + response);
         if (response.status === 201) {
             tps.clearAllTransactions();
@@ -303,7 +304,8 @@ function GlobalStoreContextProvider(props) {
 
     //THIS FUNCTION DUPLICATES THE CURRENT PLAYLIST
     store.duplicateCurrentList = async function (id) {
-        const response = await api.duplicatePlaylist(store.currentList.name, store.currentList.songs, auth.user.email);
+        let author = auth.user.firstName + " " + auth.user.lastName;
+        const response = await api.duplicatePlaylist(store.currentList.name+" (Duplicate)", store.currentList.songs, auth.user.email, author);
         console.log("duplicateList response: " + response);
         if (response.status === 201) {
             tps.clearAllTransactions();
@@ -342,6 +344,28 @@ function GlobalStoreContextProvider(props) {
         asyncLoadIdNamePairs();
     }
 
+
+    store.getPublishedLists = function() {
+        console.log("I AM HERE")
+        async function asyncLoadPublishedIdNamePairs() {
+            console.log("Now AM HERE")
+            const response = await api.getPlaylists();
+            console.log("I AM HERE after")
+            if (response.data.success) {
+                let pairsArray = response.data.idNamePairs;
+                console.log("I AM HERE",pairsArray)
+                storeReducer({
+                    type: GlobalStoreActionType.LOAD_ID_NAME_PAIRS,
+                    payload: pairsArray
+                });
+            }
+            else {
+                console.log("API FAILED TO GET THE LIST PAIRS");
+            }
+        }
+        asyncLoadPublishedIdNamePairs();
+    }
+
     // THE FOLLOWING 5 FUNCTIONS ARE FOR COORDINATING THE DELETION
     // OF A LIST, WHICH INCLUDES USING A VERIFICATION MODAL. THE
     // FUNCTIONS ARE markListForDeletion, deleteList, deleteMarkedList,
@@ -364,6 +388,7 @@ function GlobalStoreContextProvider(props) {
             let response = await api.deletePlaylistById(id);
             if (response.data.success) {
                 console.log("deleted list");
+                store.currentList = null;
                 store.loadIdNamePairs();
                 history.push("/");
             }
@@ -427,6 +452,30 @@ function GlobalStoreContextProvider(props) {
                     // history.push("/playlist/" + playlist._id);
                     store.loadIdNamePairs();
                     history.push("/");
+                }
+            }
+        }
+        asyncSetCurrentList(id);
+    }
+
+    store.setCurrentListPublished = function (id) {
+        async function asyncSetCurrentList(id) {
+            let response = await api.getPublishedPlaylistById(id);
+            if (response.data.success) {
+                let playlist = response.data.playlist;
+                if(playlist.published){
+                    playlist.listens += 1;
+                }
+                response = await api.updatePublishedPlaylistById(playlist._id, playlist);
+                if (response.data.success) {
+                    store.currentList = playlist;
+                    storeReducer({
+                        type: GlobalStoreActionType.SET_CURRENT_LIST,
+                        payload: playlist
+                    });
+                    // history.push("/playlist/" + playlist._id);
+                    store.loadIdNamePairs();
+                    history.push("/alllists");
                 }
             }
         }

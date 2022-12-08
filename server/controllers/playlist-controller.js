@@ -105,6 +105,17 @@ getPlaylistById = async (req, res) => {
         asyncFindUser(list);
     }).catch(err => console.log(err))
 }
+getPublishedPlaylistById = async (req, res) => {
+    console.log("Find Playlist with id: " + JSON.stringify(req.params.id));
+
+    await Playlist.findById({ _id: req.params.id }, (err, list) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err });
+        }
+        console.log("Found list: " + JSON.stringify(list));
+        return res.status(200).json({ success: true, playlist: list })
+    }).catch(err => console.log(err))
+}
 getPlaylistPairs = async (req, res) => {
     console.log("getPlaylistPairs");
     await User.findOne({ _id: req.userId }, (err, user) => {
@@ -143,7 +154,7 @@ getPlaylistPairs = async (req, res) => {
     }).catch(err => console.log(err))
 }
 getPlaylists = async (req, res) => {
-    await Playlist.find({}, (err, playlists) => {
+    await Playlist.find({published: true}, (err, playlists) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
@@ -152,7 +163,17 @@ getPlaylists = async (req, res) => {
                 .status(404)
                 .json({ success: false, error: `Playlists not found` })
         }
-        return res.status(200).json({ success: true, data: playlists })
+        let pairs = [];
+        for (let key in playlists) {
+            let list = playlists[key];
+            let pair = {
+                _id: list._id,
+                name: list.name,
+                playlist: list
+            };
+            pairs.push(pair);
+        }
+        return res.status(200).json({ success: true, idNamePairs: pairs })
     }).catch(err => console.log(err))
 }
 updatePlaylist = async (req, res) => {
@@ -217,6 +238,50 @@ updatePlaylist = async (req, res) => {
         asyncFindUser(playlist);
     })
 }
+updatePublishedPlaylistById = async (req, res) => {
+    const body = req.body
+    console.log("updatePlaylist: " + JSON.stringify(body));
+    console.log("req.body.name: " + req.body.name);
+
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body to update',
+        })
+    }
+
+    Playlist.findOne({ _id: req.params.id }, (err, playlist) => {
+        console.log("playlist found: " + JSON.stringify(playlist));
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'Playlist not found!',
+            })
+        }
+        list.name = body.playlist.name;
+        list.songs = body.playlist.songs;
+        list.published = body.playlist.published;
+        list.listens = body.playlist.listens;
+        list.publishDate = body.playlist.publishDate;
+        list
+            .save()
+            .then(() => {
+                console.log("SUCCESS!!!");
+                return res.status(200).json({
+                    success: true,
+                    id: list._id,
+                    message: 'Playlist updated!',
+                })
+            })
+            .catch(error => {
+                console.log("FAILURE: " + JSON.stringify(error));
+                return res.status(404).json({
+                    error,
+                    message: 'Playlist not updated!',
+                })
+            })
+    })
+}
 
 duplicatePlaylist = (req, res) => {
     const body = req.body;
@@ -256,6 +321,7 @@ duplicatePlaylist = (req, res) => {
             });
     })
 }
+
 module.exports = {
     createPlaylist,
     deletePlaylist,
@@ -263,5 +329,7 @@ module.exports = {
     getPlaylistPairs,
     getPlaylists,
     updatePlaylist,
-    duplicatePlaylist
+    duplicatePlaylist,
+    getPublishedPlaylistById,
+    updatePublishedPlaylistById
 }

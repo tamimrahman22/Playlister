@@ -23,7 +23,7 @@ export default function YouTubePlayer() {
     let artist = null;
     let url = [];
     if(store.currentList) {
-        if(store.currentList.songs.length!=0) {
+        if(store.currentList.songs[songNum]) {
             playlist = store.currentList;
             title = store.currentList.songs[songNum].title;
             artist = store.currentList.songs[songNum].artist;

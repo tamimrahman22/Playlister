@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react'
+import AuthContext from '../auth';
 import { useState } from 'react';
 import { GlobalStoreContext } from '../store'
 import ListCard from './ListCard.js'
@@ -6,6 +7,7 @@ import MUIDeleteModal from './MUIDeleteModal'
 import MUIEditSongModal from './MUIEditSongModal'
 import MUIRemoveSongModal from './MUIRemoveSongModal'
 import { Link } from 'react-router-dom'
+
 
 import AddIcon from '@mui/icons-material/Add';
 import Fab from '@mui/material/Fab';
@@ -31,13 +33,19 @@ import MenuItem from '@mui/material/MenuItem';
     
     @author McKilla Gorilla
 */
-const HomeScreen = () => {
+const AllListsScreen = () => {
     const { store } = useContext(GlobalStoreContext);
     const [anchorEl, setAnchorEl] = useState(null);
+    const { auth } = useContext(AuthContext);
     const isMenuOpen = Boolean(anchorEl);
 
+    let homeDisable = true;
+    if(auth.loggedIn) {
+        homeDisable = false;
+    }
+
     useEffect(() => {
-        store.loadIdNamePairs();
+        store.getPublishedLists();
     }, []);
 
     const handleSortMenuOpen = (event) => {
@@ -89,29 +97,43 @@ const HomeScreen = () => {
             }
             </List>;
     }
+
+    let homeButton = 
+    <IconButton 
+        aria-label="home"
+        id="home-button"
+        // onClick={}
+        size="small"
+    >
+        <Link to='/'><HomeOutlinedIcon
+            fontSize="large"
+            style = {{fill:'black'}}/></Link>
+    </IconButton>;
+    if(homeDisable){
+        homeButton = 
+        <IconButton 
+            aria-label="home"
+            id="home-button"
+            // onClick={}
+            size="small"
+            disabled={homeDisable}
+        >
+            <HomeOutlinedIcon fontSize="large"/>
+        </IconButton>
+    }
     return (
         <Box>
             <div id="list-selector-heading">
-                <IconButton 
-                    aria-label="home"
-                    id="home-button"
-                    // onClick={}
-                    size="small"
-                    color="primary"
-                >
-                    <HomeOutlinedIcon
-                        fontSize="large"
-                         />
-                </IconButton>
+                { homeButton }
                 <IconButton 
                     aria-label="user-lists"
                     id="user-lists-button"
                     // onClick={}
                     size="small"
+                    color='primary'
                 >
-                    <Link to='alllists'><GroupsOutlinedIcon
-                        fontSize="large"
-                        style={{ fill: 'black' }} /></Link>
+                    <GroupsOutlinedIcon
+                        fontSize="large"/>
                 </IconButton>
                 <IconButton 
                     aria-label="all-lists"
@@ -155,9 +177,6 @@ const HomeScreen = () => {
                             {
                                 listCard
                             }
-                            <MUIDeleteModal />
-                            <MUIEditSongModal />
-                            <MUIRemoveSongModal />
                         </List>
                     </Grid>
                     <Grid item xs={6}>
@@ -169,4 +188,4 @@ const HomeScreen = () => {
             </Box>
 )}
 
-export default HomeScreen;
+export default AllListsScreen;

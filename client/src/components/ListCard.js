@@ -70,7 +70,13 @@ function ListCard(props) {
             console.log("load " + event.target.id);
 
             // CHANGE THE CURRENT LIST
-            store.setCurrentList(id);
+            if(auth.user){
+                store.setCurrentList(id);
+            }
+            else {
+                console.log("hello");
+                store.setCurrentListPublished(id);
+            }
         }
     }
 
@@ -129,14 +135,11 @@ function ListCard(props) {
             container 
             component="main" 
             spacing={2}
-            onDoubleClick={handleToggleEdit}
-            onClick={(event) => {
-                handleLoadList(event, idNamePair._id)
-            }}>
+            onDoubleClick={handleToggleEdit}>
             <Grid item xs={6}>
             <Box sx={{ p: 1, flexGrow: 1 }}>
                 <h3>{idNamePair.name}</h3>
-                <p>By: {auth.user.firstName} {auth.user.lastName}</p>
+                <p>By: {idNamePair.playlist.author}</p>
             </Box>
             </Grid>
         </Grid>
@@ -180,15 +183,9 @@ function ListCard(props) {
                     onClick={(event) => {
                         id === idNamePair._id ? handleCloseCurrentList(event): handleLoadList(event, idNamePair._id)
                     }}
-                    sx={{
-                        pointerEvents: "auto"
-                    }}
                     fontSize="large"/> }
                 aria-controls="playlist-content"
                 id="playlist-header"
-                sx={{
-                    pointerEvents: "none"
-                  }}
                 >
                     { cardInfo }
                 </AccordionSummary>
@@ -262,15 +259,11 @@ function ListCard(props) {
             container 
             component="main" 
             spacing={2}
-            onDoubleClick={handleToggleEdit}
-            onClick={(event) => {
-                handleLoadList(event, idNamePair._id)
-            }}>
+            onDoubleClick={handleToggleEdit}>
             <Grid item xs={6}>
-            {/* <ListItem> */}
             <Box sx={{ p: 1, flexGrow: 1 }}>
                 <h3>{idNamePair.name}</h3>
-                <p>By: {auth.user.firstName} {auth.user.lastName}</p>
+                <p>By: {idNamePair.playlist.author}</p>
                 <p>Published: {idNamePair.playlist.publishDate}</p>
             </Box>
             </Grid>
@@ -290,8 +283,6 @@ function ListCard(props) {
                 justifyContent="center"
                 alignItems="center"><p>Listens:{idNamePair.playlist.listens}</p></Box>
             </Grid>
-            
-            {/* </ListItem> */}
         </Grid>
 
         
@@ -304,18 +295,12 @@ function ListCard(props) {
             >
                 <AccordionSummary
                 expandIcon={<ExpandMoreIcon 
-                    sx={{
-                        pointerEvents: "auto"
-                    }}
                     onClick={(event) => {
                         id === idNamePair._id ? handleCloseCurrentList(event): handleLoadList(event, idNamePair._id)
                     }}
                     fontSize="large"/> }
                 aria-controls="playlist-content"
                 id="playlist-header"
-                sx={{
-                    pointerEvents: "none"
-                  }}
                 >
                     { cardInfo }
                 </AccordionSummary>

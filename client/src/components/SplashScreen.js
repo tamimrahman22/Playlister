@@ -9,7 +9,7 @@ export default function SplashScreen() {
                 <h3>Welcome to Playlister!</h3>
                 <p>An application where you can create playlists and play songs of your favorite YouTube Music Videos!</p>
                 <Link to='/login/'><Button variant="contained" id="splash-screen-buttons">Login</Button></Link>
-                <Button variant="contained" id="splash-screen-buttons">Continue as Guest</Button>
+                <Link to='/alllists/'><Button variant="contained" id="splash-screen-buttons">Continue as Guest</Button></Link>
                 <Link to='/register/'><Button variant="contained" id="splash-screen-buttons">Sign Up</Button></Link>
             </div>
             <div id="create">
