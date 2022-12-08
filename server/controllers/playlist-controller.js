@@ -258,18 +258,18 @@ updatePublishedPlaylistById = async (req, res) => {
                 message: 'Playlist not found!',
             })
         }
-        list.name = body.playlist.name;
-        list.songs = body.playlist.songs;
-        list.published = body.playlist.published;
-        list.listens = body.playlist.listens;
-        list.publishDate = body.playlist.publishDate;
-        list
+        playlist.name = body.playlist.name;
+        playlist.songs = body.playlist.songs;
+        playlist.published = body.playlist.published;
+        playlist.listens = body.playlist.listens;
+        playlist.publishDate = body.playlist.publishDate;
+        playlist
             .save()
             .then(() => {
                 console.log("SUCCESS!!!");
                 return res.status(200).json({
                     success: true,
-                    id: list._id,
+                    id: playlist._id,
                     message: 'Playlist updated!',
                 })
             })

@@ -277,6 +277,17 @@ function GlobalStoreContextProvider(props) {
         tps.clearAllTransactions();
     }
 
+    // THIS FUNCTION PROCESSES CLOSING THE CURRENTLY LOADED LIST
+    store.closePublishedList = function () {
+        storeReducer({
+            type: GlobalStoreActionType.CLOSE_CURRENT_LIST,
+            payload: {}
+        });
+        // store.loadIdNamePairs();
+        history.push("/alllists");
+        tps.clearAllTransactions();
+    }
+
     // THIS FUNCTION CREATES A NEW LIST
     store.createNewList = async function () {
         let newListName = "Untitled Playlist #" + (store.idNamePairs.length);
@@ -474,7 +485,7 @@ function GlobalStoreContextProvider(props) {
                         payload: playlist
                     });
                     // history.push("/playlist/" + playlist._id);
-                    store.loadIdNamePairs();
+                    store.getPublishedLists();
                     history.push("/alllists");
                 }
             }

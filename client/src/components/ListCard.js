@@ -118,7 +118,12 @@ function ListCard(props) {
     function handleCloseCurrentList(event) {
         console.log("CLOSING DA LIST");
         id="";
-        store.closeCurrentList();
+        if(auth.user) {
+            store.closeCurrentList();
+        }
+        else {
+            store.closePublishedList();
+        }
     }
 
     let selectClass = "unselected-list-card";
@@ -329,6 +334,72 @@ function ListCard(props) {
                 </AccordionDetails>
             </Accordion>
         </div>
+    }
+
+    if (auth.user == null) {
+        cardInfo = 
+        <Grid 
+            container 
+            component="main" 
+            spacing={2}>
+            <Grid item xs={6}>
+            <Box sx={{ p: 1, flexGrow: 1 }}>
+                <h3>{idNamePair.name}</h3>
+                <p>By: {idNamePair.playlist.author}</p>
+                <p>Published: {idNamePair.playlist.publishDate}</p>
+            </Box>
+            </Grid>
+            <Grid item xs={6} >
+                <Box sx={{p:2}}>
+                <IconButton aria-label='like-button'>
+                    <ThumbUpTwoToneIcon style={{fontSize:'28pt'}} className="playlister-button"/>
+                    &nbsp;{idNamePair.playlist.likes}
+                </IconButton>
+                <IconButton aria-label='dislike-button'>
+                    <ThumbDownTwoToneIcon style={{fontSize:'28pt'}} className="playlister-button"/>
+                    &nbsp;{idNamePair.playlist.dislikes}
+                </IconButton>
+                </Box>
+                <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"><p>Listens:{idNamePair.playlist.listens}</p></Box>
+            </Grid>
+        </Grid>
+
+cardElement =
+<div>
+    <Accordion 
+        style={{backgroundColor:'rgb(113, 102, 102)'}}
+        expanded={id === idNamePair._id}
+        // onChange={handleChange(idNamePair._id)}
+    >
+        <AccordionSummary
+        expandIcon={<ExpandMoreIcon 
+            onClick={(event) => {
+                id === idNamePair._id ? handleCloseCurrentList(event): handleLoadList(event, idNamePair._id)
+            }}
+            fontSize="large"/> }
+        aria-controls="playlist-content"
+        id="playlist-header"
+        >
+            { cardInfo }
+        </AccordionSummary>
+        <AccordionDetails id="playlist-details">
+            { songList }
+            <ListItem style={{display:'flex', justifyContent:'flex-end'}}>
+                <Box sx={{ p: 0.5 }}>
+                    <Button 
+                        variant="contained"
+                        aria-label='duplicate'
+                        onClick={handleDuplicate}> 
+                            Duplicate 
+                    </Button>
+                </Box>
+            </ListItem>
+        </AccordionDetails>
+    </Accordion>
+</div>
     }
 
        
